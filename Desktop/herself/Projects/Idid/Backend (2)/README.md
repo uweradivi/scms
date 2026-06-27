@@ -9,7 +9,41 @@
 ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-A full-stack enterprise web application for managing clients, contracts, documents, and real-time communications. Built with a Spring Boot REST API backend and a React + Vite single-page frontend.
+A full-stack enterprise web application for managing clients, contracts, documents, and real-time communications — built for **Glory Construction Company Ltd (GCC Ltd)**, Kigali, Rwanda.
+
+---
+
+## Screenshots
+
+### Login Page — JWT Authentication
+![Login](screenshots/login.png)
+
+### Administrator Dashboard — User Management
+![Admin Dashboard](screenshots/admin_dashboard.png)
+
+### Staff Interface — Client Registration Form
+![Client Registration](screenshots/client_registration.png)
+
+### Staff Interface — Contract Creation with Template
+![Contract Creation](screenshots/contract_creation.png)
+
+### Manager Dashboard — Real-Time Analytics & KPI Visualization
+![Manager Dashboard](screenshots/manager_dashboard.png)
+
+### Manager Interface — Contract Approval with AI Insights
+![Contract Approval](screenshots/contract_approval.png)
+
+### Client Portal — Contract Status Tracking
+![Client Portal](screenshots/client_portal.png)
+
+### Notifications & Reminders
+![Notifications](screenshots/notifications.png)
+
+### Document Upload & Management Module
+![Documents](screenshots/documents.png)
+
+### Reports Page — Customized Operational Reports
+![Reports](screenshots/reports.png)
 
 ---
 
@@ -17,8 +51,8 @@ A full-stack enterprise web application for managing clients, contracts, documen
 
 ### Authentication & Authorization
 - JWT-based login and session management
-- Role-based access control with four roles: **Admin**, **Manager**, **Staff**, and **Client**
-- Each role sees a tailored dashboard and has scoped permissions
+- Role-based access control: **Admin**, **Manager**, **Staff**, and **Client**
+- Each role sees a tailored dashboard with scoped permissions
 
 ### Contract Lifecycle Management
 Contracts move through a fully defined workflow:
@@ -33,7 +67,7 @@ DRAFT → SUBMITTED → APPROVED → ACTIVE → EXPIRING → EXPIRED
 
 ### Real-Time Notifications
 - WebSocket integration for live contract status updates
-- Instant in-app notifications pushed to connected users on key events (approval, expiry warnings, new messages)
+- Instant in-app notifications pushed to connected users on key events
 
 ### Document Management
 - Secure file uploads integrated with **Cloudinary**
@@ -49,9 +83,9 @@ DRAFT → SUBMITTED → APPROVED → ACTIVE → EXPIRING → EXPIRED
 - Every user action is logged with timestamp, actor, and affected entity
 - Full audit trail viewable by Admins for compliance and accountability
 
-### API Documentation
-- Full **OpenAPI/Swagger** docs available at `/swagger-ui.html`
-- All endpoints documented with request/response schemas and auth requirements
+### Reports
+- Customizable contract reports filtered by status and date range
+- Export to PDF with official GCC Ltd branding and signature lines
 
 ---
 
@@ -62,7 +96,7 @@ DRAFT → SUBMITTED → APPROVED → ACTIVE → EXPIRING → EXPIRED
 | Backend Language | Java 17 |
 | Backend Framework | Spring Boot 3.2 |
 | API Style | RESTful (Spring MVC) |
-| Auth | JWT (JSON Web Tokens) |
+| Auth | JWT + Spring Security |
 | ORM | Hibernate / JPA |
 | Database | PostgreSQL 14 |
 | Real-Time | WebSocket (STOMP) |
@@ -83,30 +117,28 @@ DRAFT → SUBMITTED → APPROVED → ACTIVE → EXPIRING → EXPIRED
 ```
 scms/
 ├── backend/                  # Spring Boot REST API
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/
-│   │       │   └── com/scms/
-│   │       │       ├── auth/           # JWT auth & security config
-│   │       │       ├── contract/       # Contract lifecycle logic
-│   │       │       ├── client/         # Client management
-│   │       │       ├── document/       # Cloudinary file handling
-│   │       │       ├── notification/   # WebSocket messaging
-│   │       │       ├── audit/          # Audit logging
-│   │       │       └── analytics/      # AI analytics module
-│   │       └── resources/
-│   │           └── application.properties
-│   └── pom.xml
+│   └── src/main/java/com/scms/
+│       ├── auth/             # JWT auth & security config
+│       ├── controller/       # REST API controllers
+│       ├── service/          # Business logic layer
+│       ├── repository/       # JPA repositories
+│       ├── dto/              # Request/Response DTOs
+│       └── config/           # App configuration
 │
 └── frontend/                 # React + Vite SPA
-    ├── src/
-    │   ├── features/         # Redux slices per feature
-    │   ├── pages/            # Route-level page components
-    │   ├── components/       # Shared UI components
-    │   ├── services/         # Axios API service layer
-    │   └── App.jsx
-    ├── index.html
-    └── vite.config.js
+    └── src/
+        ├── pages/            # Route-level page components
+        │   ├── auth/         # Login, Register, Reset Password
+        │   ├── dashboard/    # Admin, Manager, Staff, Client dashboards
+        │   ├── contracts/    # Contract CRUD & lifecycle
+        │   ├── clients/      # Client management
+        │   ├── documents/    # Document upload & retrieval
+        │   ├── messages/     # Communication module
+        │   ├── notifications/# Real-time alerts
+        │   ├── ai/           # AI analytics
+        │   └── admin/        # Audit logs & reports
+        ├── components/       # Shared UI components
+        └── App.jsx
 ```
 
 ---
@@ -114,7 +146,6 @@ scms/
 ## Getting Started
 
 ### Prerequisites
-
 - Java 17+
 - Maven 3.8+
 - Node.js 18+
@@ -132,14 +163,9 @@ cd scms
 
 ```bash
 cd backend
-
-# Create the database
 createdb scms_db
-
-# Copy environment template and fill in your values
 cp .env.example .env
-
-# Run the application
+# Fill in your values in .env
 ./mvnw spring-boot:run
 ```
 
@@ -150,14 +176,8 @@ Swagger UI: `http://localhost:8081/swagger-ui.html`
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Copy environment template
 cp .env.example .env
-
-# Start development server
 npm run dev
 ```
 
@@ -168,7 +188,6 @@ Frontend runs at: `http://localhost:5173`
 ## Environment Variables
 
 ### Backend (`backend/.env`)
-
 ```env
 DB_URL=jdbc:postgresql://localhost:5432/scms_db
 DB_USERNAME=your_db_user
@@ -180,31 +199,12 @@ CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ### Frontend (`frontend/.env`)
-
 ```env
 VITE_API_BASE_URL=http://localhost:8081/api
 VITE_WS_URL=ws://localhost:8081/ws
 ```
 
-> ⚠️ **Never commit `.env` files with real credentials.** Only `.env.example` files are tracked in version control.
-
----
-
-## API Overview
-
-| Method | Endpoint | Description | Auth |
-|---|---|---|---|
-| POST | `/api/auth/login` | Authenticate and receive JWT | Public |
-| POST | `/api/auth/register` | Register new user | Admin |
-| GET | `/api/contracts` | List all contracts | All roles |
-| POST | `/api/contracts` | Create a new contract | Manager+ |
-| PATCH | `/api/contracts/{id}/status` | Update contract status | Manager+ |
-| GET | `/api/clients` | List all clients | Staff+ |
-| POST | `/api/documents/upload` | Upload document to Cloudinary | Staff+ |
-| GET | `/api/audit-logs` | View full audit trail | Admin |
-| GET | `/api/analytics/renewals` | Contract renewal predictions | Admin, Manager |
-
-Full documentation available at `/swagger-ui.html` when the backend is running.
+> ⚠️ Never commit `.env` files with real credentials.
 
 ---
 
@@ -213,12 +213,13 @@ Full documentation available at `/swagger-ui.html` when the backend is running.
 | Feature | Admin | Manager | Staff | Client |
 |---|:---:|:---:|:---:|:---:|
 | View contracts | ✅ | ✅ | ✅ | ✅ (own only) |
-| Create contracts | ✅ | ✅ | ❌ | ❌ |
+| Create contracts | ✅ | ✅ | ✅ | ❌ |
 | Approve contracts | ✅ | ✅ | ❌ | ❌ |
 | Upload documents | ✅ | ✅ | ✅ | ❌ |
 | View audit logs | ✅ | ❌ | ❌ | ❌ |
-| View analytics | ✅ | ✅ | ❌ | ❌ |
+| View AI analytics | ✅ | ✅ | ❌ | ❌ |
 | Manage users | ✅ | ❌ | ❌ | ❌ |
+| Generate reports | ✅ | ✅ | ❌ | ❌ |
 
 ---
 
@@ -233,4 +234,5 @@ Software Engineering Student — Adventist University of Central Africa (AUCA), 
 
 ## License
 
-This project is built for academic and portfolio purposes.
+This project was developed as a Final Year Project at AUCA for academic and portfolio purposes.
+
